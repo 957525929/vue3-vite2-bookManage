@@ -1,0 +1,30 @@
+<template>
+  <a-table class="ant-table-striped" :pagination="false" size="middle" :columns="columns" :data-source="data" rowKey="id" :rowClassName="(record, index) => (index % 2 === 1 ? 'table-striped' : null)"> </a-table>
+</template>
+
+<script>
+export default {
+  setup() {
+    const table_config = reactive({
+      data: null,
+      columns: [],
+    });
+cosnt  initConfig =() =>{
+      for (let key in this.config) {
+        if (Object.keys(this.table_config).includes(key)) {
+          this.table_config[key] = this.config[key];
+        }
+      }
+    }
+     const edit = (record) => {
+      router.push({ name: "book-detail", query: { id: record.id } });
+    };
+    return {
+      table_config,
+      initConfig
+    };
+  },
+};
+</script>
+
+<style></style>
