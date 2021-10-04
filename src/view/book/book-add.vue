@@ -1,7 +1,12 @@
 <template>
   <div>
     <a-card>添加图书</a-card>
-    <CommonForm ref="commonForm" :formItem="formItem.form_item" :formHandler="formItem.form_handler" />
+    <CommonForm
+      ref="commonForm"
+      :formItem="formItem.form_item"
+      :formHandler="formItem.form_handler"
+      :formData="formItem.formState"
+    />
     <!-- <a-card :bordered="false">
       <a-form ref="formRef" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-form-item label="书名" name="title">
@@ -35,12 +40,12 @@ export default {
   components: { CommonForm },
   setup() {
     const commonForm = ref(null);
-    const formState = reactive({
-      title: "",
-      author: "",
-      image: "",
-      summary: "",
-    });
+    // const formState = reactive({
+    //   title: "",
+    //   author: "",
+    //   image: "",
+    //   summary: "",
+    // });
     const formItem = reactive({
       form_item: [
         {
@@ -78,23 +83,29 @@ export default {
         },
         { label: "重置", key: "reset", handler: () => resetForm() },
       ],
+      formState: {
+        title: "",
+        author: "",
+        image: "",
+        summary: "",
+      },
     });
     const onSubmit = async () => {
-      console.log(commonForm.value.form);
-      // let res = await addBook(formState);
-      // message.success(res.data.message);
-      // resetForm();
-      console.log("22222");
+      let res = await addBook(formItem.formState);
+      message.success(res.data.message);
+      resetForm();
     };
     const resetForm = () => {
-      formState.title = "";
-      formState.author = "";
-      formState.image = "";
-      formState.summary = "";
+      // formState.title = "";
+      // formState.author = "";
+      // formState.image = "";
+      // formState.summary = "";
+      for (let key in formItem.formState) {
+        formItem.formState[key] = "";
+      }
     };
 
     return {
-      ...toRefs(formState),
       labelCol: {
         span: 2,
       },

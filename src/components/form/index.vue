@@ -1,21 +1,42 @@
 <template>
   <a-card :bordered="false">
     <a-form ref="formRef" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item v-for="item in formItem" :key="item.name" :name="item.name" :label="item.label">
+      <a-form-item
+        v-for="item in formItem"
+        :key="item.name"
+        :name="item.name"
+        :label="item.label"
+      >
         <!--Input-->
-        <a-input v-if="item.type === 'input'" :placeholder="item.placeholder" v-model="form[item.name]"></a-input>
-        <a-textarea v-if="item.type === 'textarea'" :placeholder="item.placeholder" :rows="item.rows" v-model="form[item.name]"></a-textarea>
+        <a-input
+          v-if="item.type === 'input'"
+          :placeholder="item.placeholder"
+          v-model:value="formData[item.name]"
+        ></a-input>
+        <a-textarea
+          v-if="item.type === 'textarea'"
+          :placeholder="item.placeholder"
+          :rows="item.rows"
+          v-model:value="formData[item.name]"
+        ></a-textarea>
       </a-form-item>
       <!--按钮-->
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button v-for="item in formHandler" :key="item.key" :type="item.type" @click="item.handler && item.handler()" style="margin-right: 10px">{{ item.label }}</a-button>
+        <a-button
+          v-for="item in formHandler"
+          :key="item.key"
+          :type="item.type"
+          @click="item.handler && item.handler()"
+          style="margin-right: 10px"
+          >{{ item.label }}</a-button
+        >
       </a-form-item>
     </a-form>
   </a-card>
 </template>
 
 <script>
-import { reactive, toRefs, watch } from "vue";
+import { onMounted, reactive, toRefs, watch } from "vue";
 export default {
   props: {
     formItem: {
@@ -27,23 +48,30 @@ export default {
       type: Array,
       default: () => [],
     },
+    formData: {
+      type: Object,
+      default: () => [],
+    },
   },
   setup(props) {
     const state = reactive({
-      form: {},
+      // form: {},
     });
     const initFormData = () => {
-      const formData = {};
-      props.formItem.forEach((item) => {
-        formData[item.name] = item.value || null;
-      });
-      state.form = formData;
+      // const formData = {};
+      // props.formItem.forEach((item) => {
+      //   formData[item.name] = item.value || null;
+      // });
+      // state.form = formData;
     };
+    onMounted(() => {
+      // console.log(formData);
+    });
     watch(
       () => props.formItem,
       (val) => {
         console.log(val);
-        initFormData();
+        // initFormData();
       },
       { immediate: true }
     );
