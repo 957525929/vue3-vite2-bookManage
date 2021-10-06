@@ -53,18 +53,21 @@ export default {
           label: "书名",
           name: "title",
           placeholder: "请填写书名",
+          required: true,
         },
         {
           type: "input",
           label: "作者",
           name: "author",
           placeholder: "请填写作者",
+          required: true,
         },
         {
           type: "input",
           label: "封面",
           name: "image",
           placeholder: "请填写封面",
+          required: true,
         },
         {
           type: "textarea",
@@ -72,6 +75,7 @@ export default {
           name: "summary",
           rows: "5",
           placeholder: "请填写该书简介",
+          required: true,
         },
       ],
       form_handler: [
@@ -96,10 +100,6 @@ export default {
       resetForm();
     };
     const resetForm = () => {
-      // formState.title = "";
-      // formState.author = "";
-      // formState.image = "";
-      // formState.summary = "";
       for (let key in formItem.formState) {
         formItem.formState[key] = "";
       }

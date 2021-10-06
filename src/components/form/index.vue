@@ -1,25 +1,40 @@
 <template>
   <a-card :bordered="false">
-    <a-form ref="formRef" :label-col="labelCol" :wrapper-col="wrapperCol">
+    <a-form
+      ref="formRef"
+      :model="formData"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
+    >
       <a-form-item
         v-for="item in formItem"
         :key="item.name"
         :name="item.name"
         :label="item.label"
+        :rules="item.rules"
       >
         <!--Input-->
         <a-input
           v-if="item.type === 'input'"
-          :placeholder="item.placeholder"
+          :placeholder="`${type_msg[item.type]}${item.label}`"
           v-model:value="formData[item.name]"
         ></a-input>
         <a-textarea
           v-if="item.type === 'textarea'"
-          :placeholder="item.placeholder"
+          :placeholder="`${type_msg[item.type]}${item.label}`"
           :rows="item.rows"
           v-model:value="formData[item.name]"
         ></a-textarea>
+        <a-checkbox-group
+          v-if="item.type === 'checkbox'"
+          v-model:value="formData[item.name]"
+          :options="item.options"
+        >
+        </a-checkbox-group>
+        <!-- {{ item }} -->
+        <!-- {{item.options}} -->
       </a-form-item>
+
       <!--按钮-->
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button
@@ -54,15 +69,43 @@ export default {
     },
   },
   setup(props) {
+    // const formRef = ref(null);
     const state = reactive({
-      // form: {},
+      //是否存在必填规则
+      type_msg: {
+        input: "请填写",
+        select: "请选择",
+        textarea: "请填写",
+      },
     });
     const initFormData = () => {
-      // const formData = {};
-      // props.formItem.forEach((item) => {
-      //   formData[item.name] = item.value || null;
-      // });
-      // state.form = formData;
+      props.formItem.forEach((item) => {
+        //rules规则
+        if (item.required) {
+          rules(item);
+        }
+        //自定义规则
+        if (item.validator) {
+          item.rules = item.validator;
+        }
+      });
+    };
+    const rules = (item) => {
+      // console.log(item);
+      const requestRules = [
+        {
+          required: true,
+          message: `${state.type_msg[item.type]}${item.label}`,
+          trigger: "change",
+        },
+      ];
+      //其他的rules的规则
+      if (item.rules && item.rules.length > 0) {
+        item.rules = requestRules.concat(item.rules);
+      } else {
+        item.rules = requestRules;
+      }
+      console.log(item.rules);
     };
     onMounted(() => {
       // console.log(formData);
@@ -70,8 +113,9 @@ export default {
     watch(
       () => props.formItem,
       (val) => {
-        console.log(val);
-        // initFormData();
+        // console.log("1111222");
+        // console.log(val);
+        initFormData();
       },
       { immediate: true }
     );
